@@ -1,0 +1,33 @@
+# Корень сайта на Timeweb должен указывать на эту папку (booking/public).
+
+Options -Indexes
+DirectoryIndex index.php
+AddDefaultCharset utf-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # www → без www (сайт открывается по обоим адресам, адрес в строке один).
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  # HTTP → HTTPS. Включить, когда на Timeweb выпущен сертификат для домена сайта (и www, если он заведён).
+  # RewriteCond %{HTTPS} !=on
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Скрытые файлы (.git, .env и т. п.) — не отдавать.
+  RewriteRule (^|/)\. - [F,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "same-origin"
+  <FilesMatch "\.(woff2|css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+</IfModule>

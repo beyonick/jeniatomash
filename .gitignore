@@ -1,0 +1,4 @@
+/config.php
+/var/*
+!/var/.gitkeep
+!/var/.htaccess
