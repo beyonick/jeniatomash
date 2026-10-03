@@ -4,6 +4,7 @@
  * @var string|null $icsUrl
  * @var array $problems
  * @var bool  $tgOn
+ * @var int|null $cronLast время последнего запуска cron (unix)
  */
 use Booking\Fmt;
 use function Booking\e;
@@ -25,6 +26,15 @@ use function Booking\e;
   <h2>Telegram-бот</h2>
   <p><?= $tgOn ? 'Подключён.' : 'Не настроен: нужны токен бота и chat_id в config.php. Пока бот не подключён, все события приходят на почту.' ?></p>
   <p>Команды бота: /days — расписание, /pending — заявки без ответа, /today и /tomorrow — занятия.</p>
+</section>
+
+<section class="card">
+  <h2>Cron</h2>
+  <?php if ($cronLast === null): ?>
+    <p>Ещё не запускался. Проверьте задачу в разделе Crontab панели Timeweb.</p>
+  <?php else: $ago = time() - $cronLast; ?>
+    <p>Последний запуск: <?= e(date('d.m H:i', $cronLast)) ?><?= $ago > 600 ? ' — давно, проверьте задачу в Crontab.' : ', всё в порядке.' ?></p>
+  <?php endif ?>
 </section>
 
 <section class="card">

@@ -201,6 +201,7 @@ try {
                 'icsUrl'   => strlen((string)($app->config['ics_key'] ?? '')) >= 16 ? $ics : null,
                 'problems' => $app->outbox->problems(),
                 'tgOn'     => $app->telegram->enabled() && $app->telegram->adminChatId() !== '',
+                'cronLast' => is_file($f = dirname(__DIR__, 2) . '/var/cron.last') ? filemtime($f) : null,
             ], 'admin/layout'));
     }
     Http::redirect('/admin/');

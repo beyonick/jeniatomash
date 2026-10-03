@@ -20,6 +20,9 @@ if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     exit(0);
 }
 
+// Отметка о последнем запуске — видна в админке («Календарь и бот»).
+touch(__DIR__ . '/../var/cron.last');
+
 try {
     $app = App::boot();
     $done = (new Cron($app))->run($app->now());
