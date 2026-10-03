@@ -26,12 +26,15 @@ class Telegram
     public function call(string $method, array $params = [], int $timeout = 8): array
     {
         if (!$this->enabled()) {
+            // Без токена — в лог. Номер строки служит id сообщения: по нему
+            // локальный просмотр (/dev/) применяет правки сообщений, как в Telegram.
+            $line = substr_count((string)@file_get_contents($this->logFile), "\n") + 1;
             file_put_contents(
                 $this->logFile,
                 Time::fmt(Time::now()) . " $method " . json_encode($params, JSON_UNESCAPED_UNICODE) . "\n",
                 FILE_APPEND | LOCK_EX
             );
-            return ['message_id' => 0];
+            return ['message_id' => $line];
         }
 
         $url = rtrim($this->cfg['api_base'] ?? 'https://api.telegram.org', '/') . '/bot' . $this->cfg['token'] . '/' . $method;

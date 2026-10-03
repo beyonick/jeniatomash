@@ -1,7 +1,7 @@
 <?php
 /**
  * Неделя: слоты по дням, занятые — со ссылкой на заявку.
- * @var DateTimeImmutable $monday
+ * @var DateTimeImmutable $weekStart  первый из семи показанных дней
  * @var array  $days  [Y-m-d => ['slots' => [...], 'closed' => bool]]
  * @var DateTimeImmutable $now
  * @var string $csrf
@@ -12,18 +12,18 @@ use Booking\Status;
 use Booking\View;
 use function Booking\e;
 
-$back = '/admin/?p=week&start=' . $monday->format('Y-m-d');
-$sunday = $monday->modify('+6 days');
+$back = '/admin/?p=week&start=' . $weekStart->format('Y-m-d');
+$weekEnd = $weekStart->modify('+6 days');
 $today = $now->format('Y-m-d');
 $form = static fn(string $action, string $label, array $fields, ?string $class = null) =>
     View::render('admin/_slot_form', ['csrf' => $csrf, 'action' => $action, 'label' => $label, 'fields' => $fields, 'back' => $back, 'class' => $class]);
 ?>
 <div class="admin-toolbar">
-  <h1><?= e(Fmt::date($monday->format('Y-m-d'))) ?> — <?= e(Fmt::date($sunday->format('Y-m-d'))) ?></h1>
+  <h1><?= e(Fmt::date($weekStart->format('Y-m-d'))) ?> — <?= e(Fmt::date($weekEnd->format('Y-m-d'))) ?></h1>
   <div class="admin-toolbar__nav">
-    <a class="chip" href="/admin/?p=week&start=<?= $monday->modify('-7 days')->format('Y-m-d') ?>" aria-label="Предыдущая неделя">←</a>
+    <a class="chip" href="/admin/?p=week&start=<?= $weekStart->modify('-7 days')->format('Y-m-d') ?>" aria-label="Предыдущая неделя">←</a>
     <a class="chip" href="/admin/?p=week">Сегодня</a>
-    <a class="chip" href="/admin/?p=week&start=<?= $monday->modify('+7 days')->format('Y-m-d') ?>" aria-label="Следующая неделя">→</a>
+    <a class="chip" href="/admin/?p=week&start=<?= $weekStart->modify('+7 days')->format('Y-m-d') ?>" aria-label="Следующая неделя">→</a>
   </div>
 </div>
 

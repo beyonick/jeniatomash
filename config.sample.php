@@ -9,6 +9,9 @@ return [
 
     'base_url' => 'http://localhost:8000',
 
+    // true — закрыть сайт от поисковиков (временный адрес на время разработки).
+    'noindex' => true,
+
     'db' => [
         // Локально:
         'dsn'  => 'sqlite:' . __DIR__ . '/var/booking.sqlite',

@@ -37,6 +37,7 @@ cp config.sample.php config.php
 3. Заполнить `config.php`:
    - `env` → `'prod'`
    - `base_url` → `'https://jenyatomash.nicktmsh.ru'`
+   - `noindex` → `true`, пока адрес временный
    - `db` → `mysql:host=localhost;dbname=ИМЯ;charset=utf8mb4`, пользователь и пароль
    - `secret` и `ics_key` — случайные строки:
      ```bash
@@ -137,10 +138,11 @@ php bin/telegram.php delete-webhook
 
 - [ ] Вписать ИНН в `templates/privacy.php` и `templates/consent.php` (ФИО, почта и сроки уже стоят). Отдать юристу и убрать плашку «Черновик».
 - [ ] Подать уведомление в Роскомнадзор (pd.rkn.gov.ru, онлайн, бесплатно). Спросить юриста про трансграничную передачу: уведомления Жене идут в Telegram и на Gmail, хоть и с минимумом данных.
-- [ ] Уточнить у Жени, как проходит занятие (Zoom, звонок в Telegram…), и поменять строку в письме-подтверждении:
+- [ ] Если у Жени постоянная ссылка на встречу в Телемосте, поставить её прямо в письмо-подтверждение:
   ```bash
-  php bin/settings.php set lesson_join_note '"Ссылку на Zoom Женя пришлёт за час до занятия."'
+  php bin/settings.php set lesson_join_note '"Занятие проходит в Яндекс Телемосте: https://telemost.yandex.ru/j/…"'
   ```
+- [ ] При переезде с временного адреса на постоянный домен: `base_url` и `noindex => false` в config.php, `mail.from` — ящик на новом домене, `php bin/telegram.php set-webhook` заново, новая ссылка на календарь в телефоне Жени.
 
 ## Настройки без правки кода
 

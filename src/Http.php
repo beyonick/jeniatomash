@@ -6,8 +6,14 @@ namespace Booking;
 /** Мелочи HTTP: ответы, IP, заголовки безопасности. */
 final class Http
 {
+    /** Временный адрес на время разработки: не индексировать (config.php → noindex). */
+    public static bool $noindex = false;
+
     public static function securityHeaders(): void
     {
+        if (self::$noindex) {
+            header('X-Robots-Tag: noindex, nofollow');
+        }
         header('X-Content-Type-Options: nosniff');
         header('Referrer-Policy: same-origin');
         header('X-Frame-Options: SAMEORIGIN');
@@ -56,6 +62,9 @@ final class Http
     public static function jsonAndContinue(array $data, int $status = 200): void
     {
         header('Cache-Control: no-store');
+        if (self::$noindex) {
+            header('X-Robots-Tag: noindex, nofollow');
+        }
         self::sendAndContinue(json_encode($data, JSON_UNESCAPED_UNICODE), 'application/json', $status);
     }
 

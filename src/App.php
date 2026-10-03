@@ -62,6 +62,7 @@ final class App
             ini_set('log_errors', '1');
             ini_set('error_log', dirname(__DIR__) . '/var/php-error.log');
         }
+        Http::$noindex = !empty($config['noindex']);
         $db = new Db($config['db']['dsn'], $config['db']['user'] ?? null, $config['db']['pass'] ?? null);
         return new self($config, $db);
     }

@@ -137,11 +137,11 @@ try {
     switch ($page) {
         case 'week':
             $start = (string)($_GET['start'] ?? '');
-            $monday = Time::isDay($start) ? Time::parse("$start 00:00:00") : $now->setTime(0, 0);
-            $monday = $monday->modify('-' . ((int)$monday->format('N') - 1) . ' days');
+            // Семь дней начиная с сегодняшнего (или с выбранного): ближайшие занятия всегда на экране.
+            $weekStart = Time::isDay($start) ? Time::parse("$start 00:00:00") : $now->setTime(0, 0);
             $days = [];
             for ($i = 0; $i < 7; $i++) {
-                $d = $monday->modify("+$i day")->format('Y-m-d');
+                $d = $weekStart->modify("+$i day")->format('Y-m-d');
                 $slots = $app->slots->dayStatus($d, $now);
                 foreach ($slots as &$s) {
                     $s['booking'] = $s['booking_id'] ? $app->bookings->get($s['booking_id']) : null;
@@ -151,7 +151,7 @@ try {
             }
             Http::html(View::page('admin/week', $common + [
                 'title'  => 'Неделя',
-                'monday' => $monday,
+                'weekStart' => $weekStart,
                 'days'   => $days,
             ], 'admin/layout'));
 
